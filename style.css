@@ -1,0 +1,321 @@
+:root {
+    --primary: #ffffff;
+    --secondary: #a1a1a1;
+    --accent: #ff3e3e;
+    --bg-dark: #0a0a0a;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --font-main: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--primary);
+    font-family: var(--font-main);
+    overflow-x: hidden;
+}
+
+/* Navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 5%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    backdrop-filter: blur(5px);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.nav-links {
+    display: flex;
+    gap: 3rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary);
+}
+
+/* The Trigger Button */
+.nav-trigger {
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+    padding: 8px 15px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.nav-trigger:hover {
+    background: transparent;
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.6);
+}
+
+.hero-content {
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin-bottom: 1rem;
+    background: linear-gradient(to bottom, #fff, #444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-content p {
+    color: var(--secondary);
+    font-size: 1.2rem;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+}
+
+/* Overlay */
+#dbms-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    display: none; /* Controlled by JS */
+    padding: 5rem 10%;
+    overflow-y: auto;
+}
+
+#dbms-overlay.active {
+    display: block;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(1.05); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.close-btn {
+    position: absolute;
+    top: 2rem;
+    right: 5%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.overlay-header {
+    margin-bottom: 4rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 2rem;
+}
+
+.overlay-header h2 {
+    font-size: 3rem;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+/* Practical Sections */
+.practical-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+}
+
+.practical-card h3 {
+    margin-bottom: 1.5rem;
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+/* Code Area Styles */
+.code-container {
+    position: relative;
+    margin-top: 1rem;
+}
+
+.code-area {
+    width: 100%;
+    height: 150px; /* Fixed height */
+    background: #000;
+    color: #00ff00;
+    font-family: 'Consolas', monospace;
+    font-size: 0.7rem; /* Reduced font size */
+    padding: 1rem;
+    border: 1px solid #333;
+    border-radius: 4px;
+    resize: none;
+    outline: none;
+    line-height: 1.4;
+    white-space: pre;
+    overflow: auto;
+}
+
+.copy-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--glass-border);
+    color: var(--secondary);
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.copy-badge:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* Animations */
+.fade-up {
+    animation: fadeUp 1s ease forwards;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Queries */
+@media (max-width: 1024px) {
+    .hero-content h1 {
+        font-size: 6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 1.5rem 5%;
+    }
+
+    .nav-links {
+        display: none; /* Hide standard links on mobile to keep it clean */
+    }
+
+    .nav-trigger {
+        display: block; /* Ensure it's visible on mobile */
+        font-size: 0.7rem;
+        padding: 6px 12px;
+    }
+
+    .hero-content h1 {
+        font-size: 4rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+        letter-spacing: 4px;
+    }
+
+    #dbms-overlay {
+        padding: 4rem 5%;
+    }
+
+    .overlay-header h2 {
+        font-size: 2rem;
+    }
+
+    .practical-card {
+        padding: 1.5rem;
+    }
+
+    .code-area {
+        height: 120px;
+        font-size: 0.6rem;
+    }
+
+    pre {
+        font-size: 0.8rem;
+        padding: 1rem;
+    }
+
+    .close-btn {
+        top: 1rem;
+        right: 5%;
+        font-size: 0.8rem;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .hero-content p {
+        font-size: 0.7rem;
+        letter-spacing: 3px;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+    }
+}
