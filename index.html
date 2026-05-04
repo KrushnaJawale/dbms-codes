@@ -43,7 +43,479 @@
             <p>A collection of database management system implementations.</p>
         </div>
 
-        <h2 style="color: var(--accent); margin-bottom: 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">Original Codes (Oracle / NoSQL)</h2>
+        <h2
+            style="color: var(--accent); margin-bottom: 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">
+            Pure Oracle Codes</h2>
+        <div class="practical-list">
+            <!-- Pure Oracle Practical 1 -->
+            <div class="practical-card">
+                <h3>2_Study_SQL_DDL_Command (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 2_Study_SQL_DDL_Command (Pure Oracle)
+-- 1. SETUP: CREATE TABLES
+CREATE TABLE Department (
+    deptno NUMBER PRIMARY KEY,
+    dname VARCHAR2(30) NOT NULL,
+    location VARCHAR2(30) UNIQUE
+);
+
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50) NOT NULL,
+    job VARCHAR2(30),
+    salary NUMBER CHECK (salary > 0),
+    deptno NUMBER,
+    FOREIGN KEY (deptno) REFERENCES Department(deptno)
+);
+
+-- 2. DATA ENTRY: INSERT INITIAL RECORDS
+INSERT INTO Department VALUES (10, 'Accounting', 'Mumbai');
+INSERT INTO Department VALUES (20, 'Research', 'Pune');
+INSERT INTO Department VALUES (30, 'Sales', 'Nashik');
+INSERT INTO Department VALUES (40, 'HR', 'Nagpur');
+
+INSERT INTO Employee VALUES (101, 'Rahul', 'Clerk', 3000, 10);
+INSERT INTO Employee VALUES (102, 'Amit', 'Manager', 8000, 20);
+INSERT INTO Employee VALUES (103, 'Suresh', 'Analyst', 6000, 30);
+INSERT INTO Employee VALUES (104, 'Ravi', 'Salesman', 4000, 40);
+
+-- 3. SCHEMA MODIFICATIONS
+ALTER TABLE Employee ADD phone NUMBER;
+ALTER TABLE Employee MODIFY ename VARCHAR2(100);
+ALTER TABLE Employee DROP COLUMN phone;
+
+-- 4. ADVANCED DATABASE OBJECTS
+-- Create a View for specific columns
+CREATE VIEW Emp_View AS 
+SELECT ename, job, salary FROM Employee;
+
+-- Create an Index for performance
+CREATE INDEX idx_emp_name ON Employee (ename);
+
+-- Note: In Oracle, use Sequences for auto-incrementing numbers.
+-- CREATE SEQUENCE emp_seq START WITH 105 INCREMENT BY 1;
+
+-- 5. VERIFICATION & CLEANUP
+SELECT * FROM Department;
+SELECT * FROM Employee;
+SELECT * FROM Emp_View;
+
+-- Optional: Reset the table
+-- TRUNCATE TABLE Employee;
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 2 -->
+            <div class="practical-card">
+                <h3>3_Study_SQL_DML_Command (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 3_Study_SQL_DML_Command (Pure Oracle)
+-- 1. Create Tables
+CREATE TABLE Department (
+    deptno NUMBER PRIMARY KEY,
+    dname VARCHAR2(30) NOT NULL,
+    location VARCHAR2(30) UNIQUE
+);
+
+CREATE TABLE Emp (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50) NOT NULL,
+    job VARCHAR2(30),
+    salary NUMBER CHECK (salary > 0),
+    deptno NUMBER,
+    FOREIGN KEY (deptno) REFERENCES Department (deptno)
+);
+
+-- 2. Insert Data into Department Table
+INSERT INTO Department VALUES (10, 'Accounting', 'Mumbai');
+INSERT INTO Department VALUES (20, 'Research', 'Pune');
+INSERT INTO Department VALUES (30, 'Sales', 'Nashik');
+INSERT INTO Department VALUES (40, 'HR', 'Nagpur');
+
+-- 3. Insert Data into Emp Table
+INSERT INTO Emp VALUES (101, 'Rahul', 'Clerk', 3000, 10);
+INSERT INTO Emp VALUES (102, 'Amit', 'Manager', 8000, 20);
+INSERT INTO Emp VALUES (103, 'Suresh', 'Analyst', 6000, 30);
+INSERT INTO Emp VALUES (104, 'Ravi', 'Salesman', 4000, 40);
+
+-- 4. Alter Table Operations
+ALTER TABLE Emp ADD phone NUMBER;
+ALTER TABLE Emp MODIFY ename VARCHAR2(100);
+ALTER TABLE Emp DROP COLUMN phone;
+
+-- 5. Rename Table
+RENAME Emp TO Employee;
+
+-- 6. Create View
+CREATE VIEW Emp_View AS
+SELECT ename, job, salary FROM Employee;
+
+-- 7. Create Index
+CREATE INDEX idx_emp_name ON Employee (ename);
+
+-- 8. Select Statements to View Data
+SELECT * FROM Department;
+SELECT * FROM Employee;
+SELECT * FROM Emp_View;
+
+-- 9. Truncate Table
+TRUNCATE TABLE Employee;
+SELECT * FROM Employee;
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 3 -->
+            <div class="practical-card">
+                <h3>4_Aggregate_Functions_And_Grouping (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 4_Aggregate_Functions_And_Grouping (Pure Oracle)
+-- 1. SETUP: CREATE TABLES
+CREATE TABLE Department (
+    deptno NUMBER PRIMARY KEY,
+    dname VARCHAR2(30)
+);
+
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50),
+    job VARCHAR2(30),
+    salary NUMBER,
+    deptno NUMBER,
+    FOREIGN KEY (deptno) REFERENCES Department(deptno)
+);
+
+-- 2. DATA ENTRY
+INSERT INTO Department VALUES (10, 'Accounting');
+INSERT INTO Department VALUES (20, 'Research');
+INSERT INTO Department VALUES (30, 'Sales');
+
+INSERT INTO Employee VALUES (101, 'Rahul', 'Clerk', 3000, 10);
+INSERT INTO Employee VALUES (102, 'Amit', 'Manager', 8000, 20);
+INSERT INTO Employee VALUES (103, 'Suresh', 'Analyst', 6000, 30);
+INSERT INTO Employee VALUES (104, 'Ravi', 'Clerk', 4000, 10);
+
+-- 3. JOIN OPERATIONS
+-- INNER JOIN: Only returns records where there is a match in both tables
+SELECT E.empno, E.ename, D.dname
+FROM Employee E
+INNER JOIN Department D ON E.deptno = D.deptno;
+
+-- LEFT JOIN: Returns all records from Employee, and matched records from Department
+SELECT E.empno, E.ename, D.dname
+FROM Employee E
+LEFT JOIN Department D ON E.deptno = D.deptno;
+
+-- RIGHT JOIN: Returns all records from Department, and matched records from Employee
+SELECT E.empno, E.ename, D.dname
+FROM Employee E
+RIGHT JOIN Department D ON E.deptno = D.deptno;
+
+-- 4. VIEW WITH JOIN
+CREATE VIEW Emp_Dept_View AS
+SELECT E.ename, D.dname, E.salary
+FROM Employee E
+JOIN Department D ON E.deptno = D.deptno;
+
+-- View the results
+SELECT * FROM Emp_Dept_View;
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 4 -->
+            <div class="practical-card">
+                <h3>5_Study_Of_Join_Operation_And_Views (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 5_Study_Of_Join_Operation_And_Views (Pure Oracle)
+-- 1. SETUP: CREATE TABLES
+-- We create Department first so Employee can reference it via Foreign Key
+CREATE TABLE Department (
+    deptno NUMBER PRIMARY KEY,
+    dname VARCHAR2(30) NOT NULL,
+    location VARCHAR2(30)
+);
+
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50) NOT NULL,
+    job VARCHAR2(30),
+    salary NUMBER,
+    deptno NUMBER,
+    FOREIGN KEY (deptno) REFERENCES Department(deptno)
+);
+
+-- 2. DATA ENTRY
+-- Populate Departments
+INSERT INTO Department VALUES (10, 'Accounting', 'Mumbai');
+INSERT INTO Department VALUES (20, 'Research', 'Pune');
+INSERT INTO Department VALUES (30, 'Sales', 'Nashik');
+
+-- Populate Employees
+INSERT INTO Employee VALUES (101, 'Rahul', 'Clerk', 3000, 10);
+INSERT INTO Employee VALUES (102, 'Amit', 'Manager', 8000, 20);
+INSERT INTO Employee VALUES (103, 'Suresh', 'Analyst', 6000, 30);
+INSERT INTO Employee VALUES (104, 'Ravi', 'Clerk', 4000, 10);
+
+-- 3. JOIN OPERATIONS
+-- INNER JOIN: Shows employees assigned to departments
+SELECT E.empno, E.ename, D.dname
+FROM Employee E
+INNER JOIN Department D ON E.deptno = D.deptno;
+
+-- LEFT JOIN: Shows all employees, even if they aren't in a department
+SELECT E.empno, E.ename, D.dname
+FROM Employee E
+LEFT JOIN Department D ON E.deptno = D.deptno;
+
+-- RIGHT JOIN: Shows all departments, even if they have no employees
+SELECT E.empno, E.ename, D.dname
+FROM Employee E
+RIGHT JOIN Department D ON E.deptno = D.deptno;
+
+-- 4. VIEW CREATION
+-- Creates a reusable virtual table combining data from both tables
+CREATE VIEW Emp_Dept_View AS
+SELECT E.ename, D.dname, E.salary
+FROM Employee E
+JOIN Department D ON E.deptno = D.deptno;
+
+-- Check the View output
+SELECT * FROM Emp_Dept_View;
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 5 -->
+            <div class="practical-card">
+                <h3>6_Study_Of_Subqueries_In_SQL (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 6_Study_Of_Subqueries_In_SQL (Pure Oracle)
+-- 1. SETUP: CREATE TABLES
+CREATE TABLE Department (
+    deptno NUMBER PRIMARY KEY,
+    dname VARCHAR2(30) NOT NULL
+);
+
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50) NOT NULL,
+    salary NUMBER,
+    deptno NUMBER,
+    FOREIGN KEY (deptno) REFERENCES Department(deptno)
+);
+
+-- 2. DATA ENTRY
+INSERT INTO Department VALUES (10, 'Accounting');
+INSERT INTO Department VALUES (20, 'Research');
+INSERT INTO Department VALUES (30, 'Sales');
+
+INSERT INTO Employee VALUES (101, 'Rahul', 3000, 10);
+INSERT INTO Employee VALUES (102, 'Amit', 8000, 20);
+INSERT INTO Employee VALUES (103, 'Suresh', 6000, 30);
+INSERT INTO Employee VALUES (104, 'Ravi', 4000, 10);
+
+-- 3. SUBQUERIES
+-- Find employees with salary greater than the average salary
+SELECT ename, salary 
+FROM Employee 
+WHERE salary > (SELECT AVG(salary) FROM Employee);
+
+-- Find employees working in the 'Research' department using a subquery
+SELECT ename 
+FROM Employee 
+WHERE deptno = (SELECT deptno FROM Department WHERE dname = 'Research');
+
+-- Find employees with the maximum salary
+SELECT ename, salary 
+FROM Employee 
+WHERE salary = (SELECT MAX(salary) FROM Employee);
+
+-- Find employees whose department is in a list of department IDs
+SELECT ename 
+FROM Employee 
+WHERE deptno IN (SELECT deptno FROM Department);
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 6 -->
+            <div class="practical-card">
+                <h3>7_PLSQL_Stored_Procedure_And_Function (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 7_Stored_Procedure_And_Function (Pure Oracle format)
+-- 1. SETUP: CREATE TABLE
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50),
+    salary NUMBER
+);
+
+-- 2. DATA ENTRY: INSERT RECORDS
+INSERT INTO Employee VALUES (101, 'Rahul', 3000);
+INSERT INTO Employee VALUES (102, 'Amit', 8000);
+INSERT INTO Employee VALUES (103, 'Suresh', 6000);
+INSERT INTO Employee VALUES (104, 'Ravi', 4000);
+
+-- 3. STORED PROCEDURE
+SET SERVEROUTPUT ON;
+
+CREATE OR REPLACE PROCEDURE show_emp IS
+    v_name Employee.ename%TYPE;
+    v_salary Employee.salary%TYPE;
+    CURSOR emp_cursor IS SELECT ename, salary FROM Employee;
+BEGIN
+    OPEN emp_cursor;
+    
+    LOOP
+        FETCH emp_cursor INTO v_name, v_salary;
+        EXIT WHEN emp_cursor%NOTFOUND;
+        
+        DBMS_OUTPUT.PUT_LINE(v_name || ' ' || v_salary);
+    END LOOP;
+    
+    CLOSE emp_cursor;
+END;
+/
+
+-- 4. EXECUTION
+-- Execute the procedure to display the output
+EXEC show_emp;
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 7 -->
+            <div class="practical-card">
+                <h3>8_Database_Triggers (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 8_Database_Triggers (Pure Oracle format)
+-- 1. SETUP: CREATE TABLES
+-- Main employee table
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50),
+    salary NUMBER
+);
+
+-- Log table to track actions
+CREATE TABLE Emp_Log (
+    empno NUMBER,
+    action VARCHAR2(20)
+);
+
+-- 2. TRIGGER CREATION
+-- This trigger automatically inserts a record into Emp_Log whenever a new Employee is added
+CREATE OR REPLACE TRIGGER emp_insert_trigger
+AFTER INSERT ON Employee
+FOR EACH ROW
+BEGIN
+    INSERT INTO Emp_Log (empno, action) VALUES (:NEW.empno, 'INSERT');
+END;
+/
+
+-- 3. DATA ENTRY
+-- When these rows are inserted, the trigger above will automatically fire
+INSERT INTO Employee VALUES (101, 'Rahul', 3000);
+INSERT INTO Employee VALUES (102, 'Amit', 8000);
+INSERT INTO Employee VALUES (103, 'Suresh', 6000);
+INSERT INTO Employee VALUES (104, 'Ravi', 4000);
+
+-- 4. VERIFICATION
+-- Check the main employee table
+SELECT * FROM Employee;
+
+-- Check the log table to see the trigger's work
+SELECT * FROM Emp_Log;
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 8 -->
+            <div class="practical-card">
+                <h3>9_Large_Scale_Database (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 9_Large_Scale_Database (Pure Oracle Translation)
+-- This practical demonstrates basic CRUD operations in SQL
+
+-- 0. SETUP
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50),
+    salary NUMBER,
+    bonus NUMBER DEFAULT 0
+);
+
+-- 1. INSERT DATA
+INSERT INTO Employee (empno, ename, salary) VALUES (101, 'Rahul', 3000);
+INSERT INTO Employee (empno, ename, salary) VALUES (102, 'Amit', 8000);
+INSERT INTO Employee (empno, ename, salary) VALUES (103, 'Suresh', 6000);
+INSERT INTO Employee (empno, ename, salary) VALUES (104, 'Ravi', 4000);
+
+-- 2. FIND DATA 
+SELECT * FROM Employee;
+
+-- 3. UPDATE DATA
+-- UpdateOne: Changes the salary for employee 101 specifically
+UPDATE Employee SET salary = 3500 WHERE empno = 101;
+
+-- UpdateMany: Adds a bonus of 1000 to all employees with a salary greater than 5000
+UPDATE Employee SET bonus = 1000 WHERE salary > 5000;
+
+-- 4. DELETE DATA
+-- DeleteOne: Removes the document for employee 104
+DELETE FROM Employee WHERE empno = 104;
+
+-- DeleteMany: Removes all employees with a salary less than 4000
+DELETE FROM Employee WHERE salary < 4000;
+
+-- 5. FINAL VERIFICATION
+SELECT * FROM Employee;
+</textarea>
+                </div>
+            </div>
+            <!-- Pure Oracle Practical 9 -->
+            <div class="practical-card">
+                <h3>10_Query_Using_Code_Operation (Pure Oracle)</h3>
+                <div class="code-container">
+                    <span class="copy-badge" onclick="copyCode(this)">Copy</span>
+                    <textarea class="code-area" readonly>-- 10_Query_Using_Code_Operation (Pure Oracle Translation)
+
+-- 0. SETUP
+CREATE TABLE emp (
+    id NUMBER PRIMARY KEY,
+    name VARCHAR2(50),
+    sal NUMBER
+);
+
+-- 1. CREATE / INSERT DATA
+INSERT INTO emp (id, name, sal) VALUES (1, 'A', 30000);
+INSERT INTO emp (id, name, sal) VALUES (2, 'B', 40000);
+
+-- 2. READ / FIND DATA 
+SELECT * FROM emp;
+
+-- 3. UPDATE DATA
+-- Update the salary (sal) for the record with id: 1
+UPDATE emp SET sal = 35000 WHERE id = 1;
+
+-- 4. DELETE DATA
+-- Remove the record where id is 2
+DELETE FROM emp WHERE id = 2;
+
+-- 5. FINAL VERIFICATION
+-- View the table again to verify the update and deletion
+SELECT * FROM emp;
+</textarea>
+                </div>
+            </div>
+        </div>
+
+        <h2
+            style="color: var(--accent); margin-bottom: 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">
+            Original Codes (Oracle / NoSQL)</h2>
         <div class="practical-list">
             <!-- Practical 1 -->
             <div class="practical-card">
@@ -538,7 +1010,9 @@ db.emp.find();</textarea>
             </div>
         </div>
 
-        <h2 style="color: var(--accent); margin: 4rem 0 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">Pure SQL Codes (Standard / MySQL)</h2>
+        <h2
+            style="color: var(--accent); margin: 4rem 0 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">
+            Pure SQL Codes (Standard / MySQL)</h2>
         <div class="practical-list">
             <!-- Pure SQL Practical 1 -->
             <div class="practical-card">
@@ -1027,4 +1501,5 @@ SELECT * FROM emp;</textarea>
 
     <script src="script.js"></script>
 </body>
+
 </html>
