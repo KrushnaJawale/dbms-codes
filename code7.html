@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .copy-btn {
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background: #00f0ff;
+            border: none;
+            font-weight: bold;
+            border-radius: 4px;
+            color: #000;
+        }
+
+        .practical-block {
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <section>
+        <div class="container">
+            <h1>Practical Codes</h1>
+
+            <div class="practical-block">
+                <h2>Practical 1: DDL Commands, Views & Synonyms</h2>
+                <input type="button" class="copy-btn" value="Copy Code"
+                    onclick="let t = document.getElementById('practical1'); t.select(); navigator.clipboard.writeText(t.value); this.value='Copied!'; setTimeout(()=>this.value='Copy Code', 2000);">
+                <br>
+                <textarea name="" id="practical1" cols="120" rows="30" readonly>
+-- =============================
+-- DROP (ignore errors if first run)
+-- =============================
+DROP VIEW emp_company_view;
+
+DROP SYNONYM part;
+DROP SYNONYM comp;
+
+DROP TABLE Participated CASCADE CONSTRAINTS;
+DROP TABLE Owns CASCADE CONSTRAINTS;
+DROP TABLE Accident CASCADE CONSTRAINTS;
+DROP TABLE Car CASCADE CONSTRAINTS;
+DROP TABLE Person CASCADE CONSTRAINTS;
+
+DROP TABLE Manages CASCADE CONSTRAINTS;
+DROP TABLE Works CASCADE CONSTRAINTS;
+DROP TABLE Employee CASCADE CONSTRAINTS;
+DROP TABLE Company CASCADE CONSTRAINTS;
+
+DROP SEQUENCE person_seq;
+
+-- =============================
+-- TABLES
+-- =============================
+
+CREATE TABLE Person (
+    driver_id NUMBER PRIMARY KEY,
+    name VARCHAR2(50),
+    address VARCHAR2(100)
+);
+
+CREATE TABLE Car (
+    license VARCHAR2(20) PRIMARY KEY,
+    model VARCHAR2(50),
+    year NUMBER
+);
+
+CREATE TABLE Accident (
+    report_no NUMBER PRIMARY KEY,
+    date_acc DATE,
+    location VARCHAR2(100)
+);
+
+CREATE TABLE Owns (
+    driver_id NUMBER,
+    license VARCHAR2(20),
+    PRIMARY KEY (driver_id, license),
+    FOREIGN KEY (driver_id) REFERENCES Person(driver_id),
+    FOREIGN KEY (license) REFERENCES Car(license)
+);
+
+CREATE TABLE Participated (
+    driver_id NUMBER,
+    model VARCHAR2(50),
+    report_no NUMBER,
+    damage_amount NUMBER,
+    PRIMARY KEY (driver_id, report_no),
+    FOREIGN KEY (driver_id) REFERENCES Person(driver_id),
+    FOREIGN KEY (report_no) REFERENCES Accident(report_no)
+);
+
+CREATE TABLE Employee (
+    employee_name VARCHAR2(50) PRIMARY KEY,
+    street VARCHAR2(100),
+    city VARCHAR2(50)
+);
+
+CREATE TABLE Company (
+    company_name VARCHAR2(50) PRIMARY KEY,
+    city VARCHAR2(50)
+);
+
+CREATE TABLE Works (
+    employee_name VARCHAR2(50),
+    company_name VARCHAR2(50),
+    salary NUMBER,
+    PRIMARY KEY (employee_name, company_name),
+    FOREIGN KEY (employee_name) REFERENCES Employee(employee_name),
+    FOREIGN KEY (company_name) REFERENCES Company(company_name)
+);
+
+CREATE TABLE Manages (
+    employee_name VARCHAR2(50),
+    manager_name VARCHAR2(50),
+    PRIMARY KEY (employee_name),
+    FOREIGN KEY (employee_name) REFERENCES Employee(employee_name)
+);
+
+-- =============================
+-- VIEW
+-- =============================
+
+CREATE VIEW emp_company_view AS
+SELECT e.employee_name, w.company_name
+FROM Employee e
+JOIN Works w ON e.employee_name = w.employee_name;
+
+-- =============================
+-- INDEX
+-- =============================
+
+CREATE INDEX idx_emp ON Employee(employee_name);
+CREATE INDEX idx_part ON Participated(driver_id);
+
+-- =============================
+-- SEQUENCE + INSERT
+-- =============================
+
+CREATE SEQUENCE person_seq START WITH 1 INCREMENT BY 1;
+
+INSERT INTO Person VALUES (person_seq.NEXTVAL, 'Amit', 'Pune');
+INSERT INTO Person VALUES (person_seq.NEXTVAL, 'Rahul', 'Mumbai');
+INSERT INTO Person VALUES (person_seq.NEXTVAL, 'Neha', 'Nashik');
+INSERT INTO Person VALUES (person_seq.NEXTVAL, 'Priya', 'Nagpur');
+
+-- =============================
+-- SAMPLE DATA (needed for view & update)
+-- =============================
+
+INSERT INTO Employee VALUES ('Amit', 'Street1', 'Pune');
+INSERT INTO Company VALUES ('TCS', 'Mumbai');
+INSERT INTO Works VALUES ('Amit', 'TCS', 50000);
+
+-- =============================
+-- SYNONYM
+-- =============================
+
+CREATE SYNONYM part FOR Participated;
+CREATE SYNONYM comp FOR Company;
+
+-- =============================
+-- DISPLAY USING SYNONYM
+-- =============================
+
+SELECT * FROM part;
+SELECT * FROM comp;
+
+-- =============================
+-- UPDATE USING SYNONYM
+-- =============================
+
+UPDATE comp SET city = 'Delhi' WHERE company_name = 'TCS';
+
+-- =============================
+-- FINAL CHECK
+-- =============================
+
+SELECT * FROM emp_company_view;
+SELECT * FROM Person;
+SELECT * FROM Company;
+</textarea>
+            </div>
+
+            <div class="practical-block">
+                <h2>Practical 2: DML Commands & Aggregate Functions</h2>
+                <input type="button" class="copy-btn" value="Copy Code"
+                    onclick="let t = document.getElementById('practical2'); t.select(); navigator.clipboard.writeText(t.value); this.value='Copied!'; setTimeout(()=>this.value='Copy Code', 2000);">
+                <br>
+                <textarea name="" id="practical2" cols="120" rows="30" readonly>
+-- =============================
+-- DROP (ignore errors)
+-- =============================
+DROP TABLE Employee CASCADE CONSTRAINTS;
+DROP TABLE Department CASCADE CONSTRAINTS;
+
+-- =============================
+-- CREATE TABLES
+-- =============================
+
+CREATE TABLE Department (
+    deptno NUMBER PRIMARY KEY,
+    dname VARCHAR2(50),
+    location VARCHAR2(50)
+);
+
+CREATE TABLE Employee (
+    empno NUMBER PRIMARY KEY,
+    ename VARCHAR2(50),
+    job VARCHAR2(50),
+    manager NUMBER,
+    hiredate DATE,
+    salary NUMBER,
+    commission NUMBER,
+    deptno NUMBER,
+    address VARCHAR2(50),
+    FOREIGN KEY (deptno) REFERENCES Department(deptno)
+);
+
+-- =============================
+-- INSERT INTO DEPARTMENT
+-- =============================
+
+INSERT INTO Department VALUES (10, 'Accounting', 'Mumbai');
+INSERT INTO Department VALUES (20, 'Research', 'Pune');
+INSERT INTO Department VALUES (30, 'Sales', 'Nashik');
+INSERT INTO Department VALUES (40, 'Operations', 'Nagpur');
+
+-- =============================
+-- INSERT INTO EMPLOYEE
+-- =============================
+
+INSERT INTO Employee VALUES (1001, 'Nikhil', 'Clerk', 1005, TO_DATE('17-DEC-95','DD-MON-YY'), 2800, 600, 20, 'Nashik');
+INSERT INTO Employee VALUES (1002, 'Anita', 'Salesman', 1004, TO_DATE('26-FEB-96','DD-MON-YY'), 5000, 1200, 30, 'Nagpur');
+INSERT INTO Employee VALUES (1003, 'Amit', 'Manager', 1004, TO_DATE('02-APR-96','DD-MON-YY'), 6000, NULL, 30, 'Pune');
+INSERT INTO Employee VALUES (1004, 'Nitin', 'President', NULL, TO_DATE('19-APR-96','DD-MON-YY'), 5000, NULL, 10, 'Mumbai');
+INSERT INTO Employee VALUES (1005, 'Neha', 'Analyst', 1003, TO_DATE('03-JUN-96','DD-MON-YY'), 12000, NULL, 20, 'Solapur');
+INSERT INTO Employee VALUES (1006, 'Dinesh', 'Salesman', 1003, TO_DATE('01-SEP-96','DD-MON-YY'), 6500, 1500, 30, 'Pune');
+INSERT INTO Employee VALUES (1007, 'Sumit', 'Manager', 1004, TO_DATE('01-MAY-91','DD-MON-YY'), 25000, NULL, 20, 'Mumbai');
+INSERT INTO Employee VALUES (1008, 'Ravi', 'Analyst', 1007, TO_DATE('17-NOV-95','DD-MON-YY'), 10000, NULL, 40, 'Amravati');
+
+-- =============================
+-- 1) DISPLAY EMPLOYEE INFO
+-- =============================
+SELECT empno, ename, job, manager, hiredate, salary, commission, deptno, address FROM Employee;
+
+-- =============================
+-- 2) UNIQUE JOBS
+-- =============================
+SELECT DISTINCT job FROM Employee;
+
+-- =============================
+-- 3) CHANGE DEPT 40 LOCATION
+-- =============================
+UPDATE Department SET location = 'Bangalore' WHERE deptno = 40;
+
+-- =============================
+-- 4) CHANGE NAME 1003
+-- =============================
+UPDATE Employee SET ename = 'Nikhil Gosavi' WHERE empno = 1003;
+
+-- =============================
+-- 5) DELETE EMPLOYEE
+-- =============================
+DELETE FROM Employee WHERE ename = 'Dinesh';
+
+-- =============================
+-- 6) MANAGER OR ANALYST
+-- =============================
+SELECT * FROM Employee 
+WHERE job = 'Manager' OR job = 'Analyst';
+
+-- =============================
+-- 7) EMP IN DEPT 10,20,30 AND EMPNO > 40
+-- =============================
+SELECT empno, deptno FROM Employee 
+WHERE deptno IN (10,20,30) AND empno > 40;
+
+-- =============================
+-- 8) NAMES STARTING WITH 'A'
+-- =============================
+SELECT ename, hiredate FROM Employee 
+WHERE ename LIKE 'A%';
+
+-- =============================
+-- 9) SECOND LETTER 'I'
+-- =============================
+SELECT ename FROM Employee 
+WHERE ename LIKE '_I%';
+
+-- =============================
+-- 10) MAX SALARY > 5000
+-- =============================
+SELECT deptno, MAX(salary) 
+FROM Employee 
+GROUP BY deptno 
+HAVING MAX(salary) > 5000;
+
+-- =============================
+-- FINAL CHECK
+-- =============================
+SELECT * FROM Department;
+SELECT * FROM Employee;
+</textarea>
+            </div>
+
+            <div class="practical-block">
+                <h2>Practical 3: Joins, Views & Subqueries</h2>
+                <input type="button" class="copy-btn" value="Copy Code"
+                    onclick="let t = document.getElementById('practical3'); t.select(); navigator.clipboard.writeText(t.value); this.value='Copied!'; setTimeout(()=>this.value='Copy Code', 2000);">
+                <br>
+                <textarea name="" id="practical3" cols="120" rows="30" readonly>
+-- =============================
+-- DROP (ignore errors)
+-- =============================
+DROP VIEW emp_view;
+DROP TABLE Manages CASCADE CONSTRAINTS;
+DROP TABLE Works CASCADE CONSTRAINTS;
+DROP TABLE Employee CASCADE CONSTRAINTS;
+DROP TABLE Company CASCADE CONSTRAINTS;
+
+-- =============================
+-- CREATE TABLES
+-- =============================
+
+CREATE TABLE Employee (
+    employee_name VARCHAR2(50) PRIMARY KEY,
+    street VARCHAR2(50),
+    city VARCHAR2(50)
+);
+
+CREATE TABLE Company (
+    company_name VARCHAR2(50) PRIMARY KEY,
+    city VARCHAR2(50)
+);
+
+CREATE TABLE Works (
+    employee_name VARCHAR2(50),
+    company_name VARCHAR2(50),
+    salary NUMBER,
+    PRIMARY KEY (employee_name),
+    FOREIGN KEY (employee_name) REFERENCES Employee(employee_name),
+    FOREIGN KEY (company_name) REFERENCES Company(company_name)
+);
+
+CREATE TABLE Manages (
+    employee_name VARCHAR2(50),
+    manager_name VARCHAR2(50),
+    PRIMARY KEY (employee_name)
+);
+
+-- =============================
+-- INSERT DATA
+-- =============================
+
+INSERT INTO Employee VALUES ('Amit', 'Street1', 'Mumbai');
+INSERT INTO Employee VALUES ('Neha', 'Street2', 'Pune');
+INSERT INTO Employee VALUES ('Rahul', 'Street3', 'Delhi');
+INSERT INTO Employee VALUES ('Priya', 'Street4', 'Mumbai');
+
+INSERT INTO Company VALUES ('First Bank Corporation', 'Mumbai');
+INSERT INTO Company VALUES ('Small Bank Corporation', 'Pune');
+INSERT INTO Company VALUES ('ABC Corp', 'Delhi');
+
+INSERT INTO Works VALUES ('Amit', 'First Bank Corporation', 15000);
+INSERT INTO Works VALUES ('Neha', 'First Bank Corporation', 9000);
+INSERT INTO Works VALUES ('Rahul', 'Small Bank Corporation', 12000);
+INSERT INTO Works VALUES ('Priya', 'ABC Corp', 8000);
+
+INSERT INTO Manages VALUES ('Amit', 'Boss1');
+INSERT INTO Manages VALUES ('Neha', 'Boss2');
+INSERT INTO Manages VALUES ('Rahul', 'Boss3');
+
+-- =============================
+-- 1) Employees in First Bank
+-- =============================
+SELECT employee_name 
+FROM Works 
+WHERE company_name = 'First Bank Corporation';
+
+-- =============================
+-- 2) Names + Cities (JOIN)
+-- =============================
+SELECT e.employee_name, e.city
+FROM Employee e
+JOIN Works w ON e.employee_name = w.employee_name
+WHERE w.company_name = 'First Bank Corporation';
+
+-- =============================
+-- 3) Same but salary > 10000
+-- =============================
+SELECT e.employee_name, e.city
+FROM Employee e
+JOIN Works w ON e.employee_name = w.employee_name
+WHERE w.company_name = 'First Bank Corporation'
+AND w.salary > 10000;
+
+-- =============================
+-- 4) More than each employee of Small Bank
+-- =============================
+SELECT employee_name 
+FROM Works
+WHERE salary > ALL (
+    SELECT salary FROM Works WHERE company_name = 'Small Bank Corporation'
+);
+
+-- =============================
+-- 5) More than average salary of their company
+-- =============================
+SELECT w.employee_name
+FROM Works w
+WHERE w.salary > (
+    SELECT AVG(w2.salary)
+    FROM Works w2
+    WHERE w2.company_name = w.company_name
+);
+
+-- =============================
+-- 6) Company with smallest payroll
+-- =============================
+SELECT company_name
+FROM Works
+GROUP BY company_name
+HAVING SUM(salary) = (
+    SELECT MIN(SUM(salary)) 
+    FROM Works 
+    GROUP BY company_name
+);
+
+-- =============================
+-- 7) Avg salary > First Bank avg
+-- =============================
+SELECT company_name
+FROM Works
+GROUP BY company_name
+HAVING AVG(salary) > (
+    SELECT AVG(salary) FROM Works 
+    WHERE company_name = 'First Bank Corporation'
+);
+
+-- =============================
+-- 8) View
+-- =============================
+CREATE VIEW emp_view AS
+SELECT e.employee_name, w.company_name, w.salary
+FROM Employee e
+JOIN Works w ON e.employee_name = w.employee_name;
+
+SELECT * FROM emp_view;
+
+-- =============================
+-- 9) Employees in same city as company
+-- =============================
+SELECT e.employee_name
+FROM Employee e
+JOIN Works w ON e.employee_name = w.employee_name
+JOIN Company c ON w.company_name = c.company_name
+WHERE e.city = c.city;
+
+-- =============================
+-- 10) Employees earning more than avg
+-- =============================
+SELECT employee_name
+FROM Works
+WHERE salary > (SELECT AVG(salary) FROM Works);
+</textarea>
+            </div>
+
+            <div class="practical-block">
+                <h2>Practical 4: Unnamed PL/SQL Block (Control Structures & Exceptions)</h2>
+                <input type="button" class="copy-btn" value="Copy Code"
+                    onclick="let t = document.getElementById('practical4'); t.select(); navigator.clipboard.writeText(t.value); this.value='Copied!'; setTimeout(()=>this.value='Copy Code', 2000);">
+                <br>
+                <textarea name="" id="practical4" cols="120" rows="30" readonly>
+-- =============================
+-- DROP (ignore errors)
+-- =============================
+DROP TABLE Fine CASCADE CONSTRAINTS;
+DROP TABLE Borrower CASCADE CONSTRAINTS;
+
+-- =============================
+-- CREATE TABLES
+-- =============================
+
+CREATE TABLE Borrower (
+    Rollin NUMBER PRIMARY KEY,
+    Name VARCHAR2(50),
+    DateofIssue DATE,
+    NameofBook VARCHAR2(100),
+    Status VARCHAR2(1) CHECK (Status IN ('I', 'R'))
+);
+
+CREATE TABLE Fine (
+    Roll_no NUMBER,
+    Fine_Date DATE,
+    Amt NUMBER,
+    FOREIGN KEY (Roll_no) REFERENCES Borrower(Rollin)
+);
+
+-- =============================
+-- INSERT SAMPLE DATA
+-- =============================
+
+INSERT INTO Borrower VALUES (1, 'Alice', TO_DATE('01-APR-2026', 'DD-MON-YYYY'), 'DBMS Concepts', 'I');
+INSERT INTO Borrower VALUES (2, 'Bob', TO_DATE('15-MAR-2026', 'DD-MON-YYYY'), 'Operating Systems', 'I');
+INSERT INTO Borrower VALUES (3, 'Charlie', TO_DATE('10-FEB-2026', 'DD-MON-YYYY'), 'Data Structures', 'I');
+
+-- =============================
+-- PL/SQL BLOCK (UNNAMED)
+-- =============================
+SET SERVEROUTPUT ON;
+
+DECLARE
+    v_roll NUMBER := &Enter_Roll_No;
+    v_book VARCHAR2(100) := '&Enter_Book_Name';
+    
+    v_issue_date DATE;
+    v_status VARCHAR2(1);
+    v_days NUMBER;
+    v_fine_amt NUMBER := 0;
+    
+    -- Exception for book not found
+    ex_not_issued EXCEPTION;
+    
+BEGIN
+    -- 1. Accept roll_no & name of book from user
+    
+    -- Check if borrower has the book issued
+    BEGIN
+        SELECT DateofIssue, Status 
+        INTO v_issue_date, v_status
+        FROM Borrower
+        WHERE Rollin = v_roll AND NameofBook = v_book AND Status = 'I';
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RAISE ex_not_issued;
+    END;
+    
+    -- Calculate days passed since issue
+    v_days := TRUNC(SYSDATE) - v_issue_date;
+    
+    -- 2 & 3. Calculate Fine based on number of days
+    IF v_days > 15 AND v_days <= 30 THEN
+        v_fine_amt := (v_days - 15) * 5;
+    ELSIF v_days > 30 THEN
+        v_fine_amt := (15 * 5) + ((v_days - 30) * 50);
+    ELSE
+        v_fine_amt := 0; -- No fine if less than 15 days
+    END IF;
+    
+    -- 4. Change status from I to R
+    UPDATE Borrower 
+    SET Status = 'R' 
+    WHERE Rollin = v_roll AND NameofBook = v_book;
+    
+    -- 5. If fine > 0, store details in fine table
+    IF v_fine_amt > 0 THEN
+        INSERT INTO Fine (Roll_no, Fine_Date, Amt) 
+        VALUES (v_roll, SYSDATE, v_fine_amt);
+        DBMS_OUTPUT.PUT_LINE('Book returned. Fine amount of Rs. ' || v_fine_amt || ' inserted into Fine table.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Book returned. No fine.');
+    END IF;
+    
+    COMMIT;
+    
+EXCEPTION
+    WHEN ex_not_issued THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Book not found, already returned, or invalid Roll No.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+        ROLLBACK;
+END;
+/
+
+-- =============================
+-- VERIFY RESULTS
+-- =============================
+SELECT * FROM Borrower;
+SELECT * FROM Fine;
+</textarea>
+            </div>
+
+            <div class="practical-block">
+                <h2>Practical 5: PL/SQL Parameterized Cursors</h2>
+                <input type="button" class="copy-btn" value="Copy Code"
+                    onclick="let t = document.getElementById('practical5'); t.select(); navigator.clipboard.writeText(t.value); this.value='Copied!'; setTimeout(()=>this.value='Copy Code', 2000);">
+                <br>
+                <textarea name="" id="practical5" cols="120" rows="30" readonly>
+-- =============================
+-- DROP (ignore errors)
+-- =============================
+DROP TABLE N_RollCall CASCADE CONSTRAINTS;
+DROP TABLE O_RollCall CASCADE CONSTRAINTS;
+
+-- =============================
+-- CREATE TABLES
+-- =============================
+CREATE TABLE O_RollCall (
+    roll_no NUMBER PRIMARY KEY,
+    name VARCHAR2(50),
+    attendance NUMBER
+);
+
+CREATE TABLE N_RollCall (
+    roll_no NUMBER PRIMARY KEY,
+    name VARCHAR2(50),
+    attendance NUMBER
+);
+
+-- =============================
+-- INSERT SAMPLE DATA
+-- =============================
+INSERT INTO O_RollCall VALUES (1, 'Amit', 80);
+INSERT INTO O_RollCall VALUES (2, 'Neha', 85);
+INSERT INTO O_RollCall VALUES (3, 'Rahul', 90);
+
+INSERT INTO N_RollCall VALUES (2, 'Neha', 85);      -- Duplicate (should be skipped)
+INSERT INTO N_RollCall VALUES (4, 'Priya', 75);     -- New (should be merged)
+INSERT INTO N_RollCall VALUES (5, 'Sneha', 92);     -- New (should be merged)
+INSERT INTO N_RollCall VALUES (1, 'Amit', 80);      -- Duplicate (should be skipped)
+
+COMMIT;
+
+-- =============================
+-- PL/SQL BLOCK (Parameterized Cursor)
+-- =============================
+SET SERVEROUTPUT ON;
+
+DECLARE
+    -- Parameterized cursor to fetch from N_RollCall based on attendance
+    CURSOR cur_new_roll(p_min_attendance NUMBER) IS
+        SELECT roll_no, name, attendance 
+        FROM N_RollCall 
+        WHERE attendance >= p_min_attendance;
+        
+    v_roll N_RollCall.roll_no%TYPE;
+    v_name N_RollCall.name%TYPE;
+    v_att N_RollCall.attendance%TYPE;
+    
+    v_exists NUMBER;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('--- Merging Data ---');
+    
+    -- Open cursor, passing 0 as parameter to fetch all records
+    OPEN cur_new_roll(0);
+    LOOP
+        FETCH cur_new_roll INTO v_roll, v_name, v_att;
+        EXIT WHEN cur_new_roll%NOTFOUND;
+        
+        -- Check if data already exists in O_RollCall
+        SELECT COUNT(*) INTO v_exists 
+        FROM O_RollCall 
+        WHERE roll_no = v_roll;
+        
+        IF v_exists = 0 THEN
+            INSERT INTO O_RollCall (roll_no, name, attendance) 
+            VALUES (v_roll, v_name, v_att);
+            DBMS_OUTPUT.PUT_LINE('Inserted: Roll No ' || v_roll || ' - ' || v_name);
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Skipped: Roll No ' || v_roll || ' already exists.');
+        END IF;
+    END LOOP;
+    CLOSE cur_new_roll;
+    
+    COMMIT;
+END;
+/
+
+-- =============================
+-- VERIFY RESULTS
+-- =============================
+SELECT * FROM O_RollCall ORDER BY roll_no;
+</textarea>
+            </div>
+
+            <div class="practical-block">
+                <h2>Practical 6: PL/SQL Stored Procedures</h2>
+                <input type="button" class="copy-btn" value="Copy Code"
+                    onclick="let t = document.getElementById('practical6'); t.select(); navigator.clipboard.writeText(t.value); this.value='Copied!'; setTimeout(()=>this.value='Copy Code', 2000);">
+                <br>
+                <textarea name="" id="practical6" cols="120" rows="30" readonly>
+-- =============================
+-- DROP (ignore errors)
+-- =============================
+DROP TABLE Result CASCADE CONSTRAINTS;
+DROP TABLE Stud_Marks CASCADE CONSTRAINTS;
+
+-- =============================
+-- CREATE TABLES
+-- =============================
+CREATE TABLE Stud_Marks (
+    Roll NUMBER PRIMARY KEY,
+    Name VARCHAR2(50),
+    Total_marks NUMBER
+);
+
+CREATE TABLE Result (
+    Roll NUMBER PRIMARY KEY,
+    Name VARCHAR2(50),
+    Class VARCHAR2(50),
+    FOREIGN KEY (Roll) REFERENCES Stud_Marks(Roll)
+);
+
+-- =============================
+-- INSERT SAMPLE DATA
+-- =============================
+INSERT INTO Stud_Marks VALUES (1, 'Alice', 1050); -- Distinction (>= 990)
+INSERT INTO Stud_Marks VALUES (2, 'Bob', 950);    -- First Class (900 - 989)
+INSERT INTO Stud_Marks VALUES (3, 'Charlie', 850);-- Higher Second Class (825 - 899)
+INSERT INTO Stud_Marks VALUES (4, 'David', 800);  -- Other
+INSERT INTO Stud_Marks VALUES (5, 'Eve', 1600);   -- Out of bounds
+
+COMMIT;
+
+-- =============================
+-- CREATE STORED PROCEDURE
+-- =============================
+CREATE OR REPLACE PROCEDURE proc_Grade (
+    p_roll IN NUMBER,
+    p_name IN VARCHAR2,
+    p_marks IN NUMBER
+) AS
+    v_class VARCHAR2(50);
+BEGIN
+    IF p_marks >= 990 AND p_marks <= 1500 THEN
+        v_class := 'Distinction';
+    ELSIF p_marks >= 900 AND p_marks <= 989 THEN
+        v_class := 'First Class';
+    ELSIF p_marks >= 825 AND p_marks <= 899 THEN
+        v_class := 'Higher Second Class';
+    ELSE
+        v_class := 'Other/Pass'; -- Default for marks outside the specified ranges
+    END IF;
+    
+    -- Insert into Result table
+    INSERT INTO Result (Roll, Name, Class) 
+    VALUES (p_roll, p_name, v_class);
+    
+END proc_Grade;
+/
+
+-- =============================
+-- PL/SQL BLOCK USING PROCEDURE
+-- =============================
+SET SERVEROUTPUT ON;
+
+DECLARE
+    -- Cursor to iterate through all students
+    CURSOR cur_marks IS SELECT Roll, Name, Total_marks FROM Stud_Marks;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('--- Processing Student Grades ---');
+    
+    FOR student_rec IN cur_marks LOOP
+        -- Call the stored procedure for each student
+        proc_Grade(student_rec.Roll, student_rec.Name, student_rec.Total_marks);
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE('All grades processed and inserted into Result table.');
+    COMMIT;
+END;
+/
+
+-- =============================
+-- VERIFY RESULTS
+-- =============================
+SELECT * FROM Result ORDER BY Roll;
+</textarea>
+            </div>
+
+            <div class="practical-block">
+                <h2>Practical 7: Database Triggers & Audit Tables</h2>
+                <input type="button" class="copy-btn" value="Copy Code"
+                    onclick="let t = document.getElementById('practical7'); t.select(); navigator.clipboard.writeText(t.value); this.value='Copied!'; setTimeout(()=>this.value='Copy Code', 2000);">
+                <br>
+                <textarea name="" id="practical7" cols="120" rows="30" readonly>
+-- =============================
+-- DROP (ignore errors)
+-- =============================
+DROP TABLE Library_Audit CASCADE CONSTRAINTS;
+DROP TABLE Library CASCADE CONSTRAINTS;
+
+-- =============================
+-- CREATE TABLES
+-- =============================
+CREATE TABLE Library (
+    Book_ID NUMBER PRIMARY KEY,
+    Book_Name VARCHAR2(100),
+    Author VARCHAR2(50),
+    Price NUMBER
+);
+
+CREATE TABLE Library_Audit (
+    Audit_ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    Book_ID NUMBER,
+    Book_Name VARCHAR2(100),
+    Author VARCHAR2(50),
+    Price NUMBER,
+    Action_Type VARCHAR2(20),
+    Action_Date DATE
+);
+
+-- =============================
+-- INSERT SAMPLE DATA
+-- =============================
+INSERT INTO Library VALUES (101, 'Database System Concepts', 'Korth', 600);
+INSERT INTO Library VALUES (102, 'Operating System Concepts', 'Galvin', 550);
+INSERT INTO Library VALUES (103, 'Data Structures', 'Tenenbaum', 450);
+
+COMMIT;
+
+-- =============================
+-- CREATE TRIGGER
+-- =============================
+CREATE OR REPLACE TRIGGER trg_Library_Audit
+BEFORE UPDATE OR DELETE ON Library
+FOR EACH ROW
+DECLARE
+    v_action VARCHAR2(20);
+BEGIN
+    IF UPDATING THEN
+        v_action := 'UPDATE';
+    ELSIF DELETING THEN
+        v_action := 'DELETE';
+    END IF;
+
+    -- Insert old values into the Audit table
+    INSERT INTO Library_Audit (Book_ID, Book_Name, Author, Price, Action_Type, Action_Date)
+    VALUES (:OLD.Book_ID, :OLD.Book_Name, :OLD.Author, :OLD.Price, v_action, SYSDATE);
+
+    DBMS_OUTPUT.PUT_LINE('Trigger Fired: ' || v_action || ' operation recorded in Library_Audit.');
+END;
+/
+
+-- =============================
+-- TEST THE TRIGGER
+-- =============================
+SET SERVEROUTPUT ON;
+
+-- 1. Test Update
+UPDATE Library SET Price = 650 WHERE Book_ID = 101;
+
+-- 2. Test Delete
+DELETE FROM Library WHERE Book_ID = 103;
+
+COMMIT;
+
+-- =============================
+-- VERIFY RESULTS
+-- =============================
+SELECT * FROM Library;
+SELECT * FROM Library_Audit ORDER BY Audit_ID;
+</textarea>
+            </div>
+
+
+        </div>
+    </section>
+
+</body>
+
+</html>
