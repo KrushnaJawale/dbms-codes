@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WD Practical Cheat Page</title>
+<style>
+body{font-family:Arial;padding:10px}
+textarea{width:100%;height:120px}
+button{margin:5px 0}
+</style>
+<script>
+function copy(id){
+  let x=document.getElementById(id);
+  x.select();
+  document.execCommand("copy");
+}
+</script>
+</head>
+
+<body>
+
+<h3>1. Personal Details Page</h3>
+<textarea id="q1">
+<html><body>
+<h1>Name: Krushna</h1>
+<b>Branch:</b> SE COMP<br>
+<i>College:</i> SIT<br>
+<u>City:</u> Pune
+</body></html>
+</textarea>
+<button onclick="copy('q1')">Copy</button>
+
+<h3>2. Image, Link, Nested Table</h3>
+<textarea id="q2">
+<html><body>
+<img src="img.jpg" width="100">
+<a href="https://google.com">Link</a>
+<table border=1>
+<tr><td>Outer
+<table border=1><tr><td>Inner</td></tr></table>
+</td></tr>
+</table>
+</body></html>
+</textarea>
+<button onclick="copy('q2')">Copy</button>
+
+<h3>3. Form</h3>
+<textarea id="q3">
+<form>
+<input placeholder="Name"><br>
+<input type="email" placeholder="Email"><br>
+Gender:
+<input type="radio" name="g">M
+<input type="radio" name="g">F<br>
+<input type="date"><br>
+<button>Submit</button>
+</form>
+</textarea>
+<button onclick="copy('q3')">Copy</button>
+
+<h3>4. CSS Types</h3>
+<textarea id="q4">
+<html>
+<head>
+<style>h1{color:red}</style>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1 style="color:blue">Heading</h1>
+<table border=1><tr><td>Data</td></tr></table>
+</body></html>
+</textarea>
+<button onclick="copy('q4')">Copy</button>
+
+<h3>5. Bootstrap</h3>
+<textarea id="q5">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="container">
+<div class="row">
+<div class="col bg-primary">1</div>
+<div class="col bg-danger">2</div>
+</div>
+</div>
+</textarea>
+<button onclick="copy('q5')">Copy</button>
+
+<h3>6. JS Validation</h3>
+<textarea id="q6">
+<form onsubmit="return validate()">
+<input id="email"><button>Submit</button>
+</form>
+<script>
+function validate(){
+let e=document.getElementById("email").value;
+if(e==""){alert("Empty");return false;}
+return true;
+}
+</script>
+</textarea>
+<button onclick="copy('q6')">Copy</button>
+
+<h3>7. DOM</h3>
+<textarea id="q7">
+<p id="p"></p>
+<button onclick="fun()">Click</button>
+<script>
+function fun(){
+document.getElementById("p").innerHTML="Hello";
+}
+</script>
+</textarea>
+<button onclick="copy('q7')">Copy</button>
+
+<h3>8. Calculator</h3>
+<textarea id="q8">
+<script>
+function calc(a,b,op){
+switch(op){
+case '+':return a+b;
+case '-':return a-b;
+}
+}
+alert(calc(5,2,'+'));
+</script>
+</textarea>
+<button onclick="copy('q8')">Copy</button>
+
+<h3>9. PHP Date</h3>
+<textarea id="q9">
+<?php
+echo "Welcome<br>";
+echo date("Y-m-d H:i:s");
+?>
+</textarea>
+<button onclick="copy('q9')">Copy</button>
+
+<h3>10. PHP POST</h3>
+<textarea id="q10">
+<form method="post">
+<input name="n"><button>Send</button>
+</form>
+<?php
+echo $_POST['n'];
+?>
+</textarea>
+<button onclick="copy('q10')">Copy</button>
+
+<h3>11. PHP String</h3>
+<textarea id="q11">
+<?php
+$s="hello";
+echo strrev($s);
+echo strlen($s);
+echo substr($s,1,3);
+?>
+</textarea>
+<button onclick="copy('q11')">Copy</button>
+
+<h3>12. PHP Array</h3>
+<textarea id="q12">
+<?php
+$a=array(1,2,3);
+foreach($a as $v) echo $v;
+?>
+</textarea>
+<button onclick="copy('q12')">Copy</button>
+
+</body>
+</html>
