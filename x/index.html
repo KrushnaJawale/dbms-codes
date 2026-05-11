@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook Downloads</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+            background-color: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24pt;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 11pt;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 12pt;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        .icon {
+            margin-right: 15px;
+            color: #3498db;
+            font-size: 1.2em;
+        }
+        .download-btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 13pt;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        .download-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Question Sets</h1>
+        <p>Access your Jupyter Notebook collection from the local repository.</p>
+        
+        <ul class="file-list">
+            <li class="file-item"><span class="icon">📓</span> Question set 1.ipynb</li>
+            <li class="file-item"><span class="icon">📓</span> Question set 2.ipynb</li>
+            <li class="file-item"><span class="icon">📓</span> Question set 3.ipynb</li>
+            <li class="file-item"><span class="icon">📓</span> Question set 4.ipynb</li>
+            <li class="file-item"><span class="icon">📓</span> Question Set 5.ipynb</li>
+            <li class="file-item"><span class="icon">📓</span> Question set 6.ipynb</li>
+            <li class="file-item"><span class="icon">📓</span> Question Set 7.ipynb</li>
+            <li class="file-item"><span class="icon">📓</span> Question Set 8.ipynb</li>
+        </ul>
 
+        <a href="#" class="download-btn" onclick="alert('In a real environment, this button would trigger a batch download or open a file selector for these local assets.')">Download All Notebooks</a>
+    </div>
+</body>
+</html>
